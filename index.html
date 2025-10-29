@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Text Analysis</title>
+    <style>
+        :root {
+            --primary-color: #800020; 
+            --secondary-color: #A9A9A9; 
+            --background-light: #F8F8F8; 
+            --background-dark: #FFFFFF; 
+            --text-color: #333333; 
+            --base-font-size: 15px; 
+            --base-font-family: 'Arial', sans-serif; 
+        }
+
+        body {
+          
+            font-family: var(--base-font-family);
+            font-size: var(--base-font-size);
+            background-color: var(--background-light);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            background-color: var(--primary-color);
+            color: var(--background-dark);
+            padding: 15px 0; 
+            font-size: 1.2em; 
+            letter-spacing: 1px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-weight: bold; 
+            font-size: 1.8em; 
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .left, .right {
+            padding: 20px;
+            background-color: var(--background-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .left {
+            flex: 1;
+            min-width: 300px;
+            margin-right: 20px;
+        }
+
+        .right {
+            flex: 2;
+            min-width: 400px;
+        }
+
+        .left label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: var(--base-font-size); 
+            color: var(--primary-color);
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            font-size: var(--base-font-size); 
+            font-family: var(--base-font-family); 
+            border-radius: 4px;
+            border: 1px solid var(--secondary-color);
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        
+        input[type="checkbox"] {
+            margin-right: 5px;
+            accent-color: var(--primary-color); 
+        }
+        
+        .left p label {
+            color: var(--text-color) !important; 
+            font-weight: normal !important;
+        }
+        input[type="submit"] {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px; 
+            margin-top: 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: var(--base-font-size);
+            letter-spacing: 1px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="submit"]:hover {
+            background-color: #6A001F;
+        }
+        
+        .right h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.3em; 
+        }
+
+        .right p {
+            font-size: var(--base-font-size); 
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: var(--base-font-size); 
+            background-color: var(--background-dark);
+        }
+
+        th, td {
+            border: 1px solid var(--secondary-color);
+            padding: 10px; 
+            text-align: left;
+            font-size: var(--base-font-size); 
+        }
+
+        th {
+            background-color: var(--background-light);
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .counts {
+            margin-top: 15px;
+            font-size: var(--base-font-size); 
+            font-weight: bold;
+        }
+        .counts p {
+            margin: 6px 0;
+            padding-left: 10px;
+            border-left: 3px solid var(--primary-color);
+            color: var(--text-color) !important; 
+        }
+        
+        .right p[style*="font-size:20px"] {
+            color: var(--primary-color) !important;
+            font-size: 1.2em !important; 
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            .left {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header><h1>Book Text Analysis</h1></header>
+    <div class="container">
+        <div class="left">
+            <form method="POST">
+                <label for="input_text">Enter your text:</label>
+                <textarea name="input_text" id="input_text">{{ input_text }}</textarea><br>
+                
+                <p style="margin-top: 15px;">
+                    <input type="checkbox" name="do_annotation" id="do_annotation" {% if do_annotation %}checked{% endif %}> 
+                    <label for="do_annotation">Generate Book Annotation</label>
+                </p>
+                <p style="margin-top: 5px;">
+                    <input type="checkbox" name="do_emotions" id="do_emotions" {% if do_emotions %}checked{% endif %}> 
+                    <label for="do_emotions">Analyze Emotions</label>
+                </p>
+
+                <input type="submit" value="Analyze Text">
+            </form>
+        </div>
+        <div class="right">
+            {% if annotation %}
+                <h3>Book Annotation</h3>
+                <p>{{ annotation }}</p>
+            {% endif %}
+
+            {% if overall_emotion %}
+                <h3>Dominant Emotion</h3>
+                <p style="font-size:20px; color:#800020;">{{ overall_emotion }}</p>
+            {% endif %}
+
+            {% if counts_md %}
+                <h3>Emotion Distribution</h3>
+                <div class="counts">
+                    {% for line in counts_md %}
+                        {% set em = line.split(":")[0].lower().strip() %}
+                        <p>{{ line }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if sentence_emotions %}
+                <h3>Sentences and Emotions</h3>
+                <table>
+                    <tr>
+                        <th>Sentence</th>
+                        <th>Emotion</th>
+                    </tr>
+                    {% for row in sentence_emotions %}
+                    <tr>
+                        <td>{{ row['Sentence'] }}</td>
+                        <td>{{ row['Emotion'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
